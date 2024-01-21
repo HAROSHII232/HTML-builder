@@ -6,25 +6,18 @@ fs.readdir(secretFolderPath, { withFileTypes: true }, (error, files) => {
   if (error) console.log(error);
 
   files.forEach((file) => {
-    let innerFilePath = __filename;
-    fs.stat(innerFilePath, (error, stats) => {
+    const pathFile = path.join(secretFolderPath, file.name);
+
+    fs.stat(pathFile, (error, stats) => {
       if (error) console.log(error);
 
-      if (file.isFile()) {
-        const pathFile = path.join(secretFolderPath, file.name);
+      if (stats.isFile()) {
         const fileName = path.basename(pathFile, path.extname(pathFile));
         const fileExtname = path.extname(pathFile).slice(1);
-        console.log(`${fileName} - ${fileExtname}`);
+        const fileSize = stats.size;
+
+        console.log(`${fileName} - ${fileExtname} - ${fileSize / 1000}kb`);
       }
     });
   });
 });
-
-/* 
-try {
-  const files = await fs.readdir(innerFolderPath);
-  for (const file of files)
-    console.log(file);
-} catch (err) {
-  console.error(err);
-} */
